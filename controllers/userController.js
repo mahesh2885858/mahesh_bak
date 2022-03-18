@@ -19,9 +19,8 @@ const userController = {
         const user = await userModel.findOne({ username });
         if (user) {
           if (user.password === password) {
-            let session = req.session;
-            session.userId = user._id;
-            console.log(req.session);
+            req.session.userID = user._id;
+
             res.status(200).send(user);
           } else {
             res.status(400).send("give password");
@@ -36,6 +35,23 @@ const userController = {
       res.send(error);
     }
   },
+  retainLogin: async (req, res) => {
+    try {
+      if (req.id) {
+        const user = await userModel.findById(req.id);
+        if (user) {
+          res.send(user);
+        } else {
+          res.send("please login again");
+        }
+      } else {
+        res.send("no user please login again");
+      }
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
   getMenu: async (req, res) => {
     try {
       const items = await MenuItemModel.find();
@@ -45,12 +61,12 @@ const userController = {
     }
   },
   placeOrder: async (req, res) => {
-    const { id, itemName, quantity, unitPrice } = req.body;
+    console.log(req.body);
     try {
       const data = await userModel.findByIdAndUpdate(
-        id,
+        req.id,
         {
-          $push: { orders: { itemName, quantity, unitPrice } },
+          $push: { orders: { items: req.body } },
         },
         { new: true }
       );
@@ -72,6 +88,16 @@ const userController = {
       res.send(data);
     } catch (error) {
       res.send(error);
+    }
+  },
+  logout: async (req, res) => {
+    try {
+      req.session.destroy((err) => {
+        res.send("logout");
+      });
+    } catch (error) {
+      res.send(error);
+      console.log(error);
     }
   },
 };

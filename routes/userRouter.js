@@ -1,9 +1,12 @@
 import express from "express";
 import userController from "../controllers/userController.js";
+import checkUser from "../middlewares/checkUser.js";
 const router = express.Router();
 router.get("/getmenu", userController.getMenu);
 router.post("/register", userController.registerUser);
 router.post("/login", userController.login);
-router.put("/placeorder", userController.placeOrder);
-router.put("/cancelorder", userController.cancelOrder);
+router.put("/placeorder", checkUser, userController.placeOrder);
+router.put("/cancelorder", checkUser, userController.cancelOrder);
+router.get("/retainlogin", checkUser, userController.retainLogin);
+router.get("/logout", userController.logout);
 export default router;

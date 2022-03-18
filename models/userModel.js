@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 import { reqNum, reqString } from "./menuItemModel.js   ";
-const orderScheema = new mongoose.Schema({
+const orderItemScheema = {
   itemName: reqString,
   unitPrice: reqNum,
   quantity: reqNum,
-  isDelivered: { ...reqString, default: false },
-  isCancelled: { ...reqString, default: false },
+};
+const orderScheema = new mongoose.Schema({
+  items: [orderItemScheema],
+  isDelivered: { ...reqString, default: false, type: Boolean },
+  isCancelled: { ...reqString, default: false, type: Boolean },
 });
 const userScheema = new mongoose.Schema({
   username: reqString,

@@ -29,10 +29,11 @@ app.use(
   session({
     secret: "mahesh123jas;lfjaslf6547r61243123",
     resave: false,
-
     saveUninitialized: false,
     store,
     cookie: {
+      httpOnly: true,
+
       maxAge: 1000 * 60 * 30, //user will logout in 30 minutes
     },
   })
